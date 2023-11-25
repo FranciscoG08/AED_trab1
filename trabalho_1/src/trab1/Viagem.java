@@ -1,4 +1,5 @@
 package trab1;
+
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -6,18 +7,18 @@ import java.util.LinkedList;
  *
  * @author Francisco
  */
+
 public class Viagem {
-    private int cod;
+    private int cod=0;
     private String localPartida;
     private String localDestino;
     private Date dataPartida;
     private double precoBilhete;
     private int numLugares;
-    private int numLugaresComprados;
     private Motorista motoristas;
     private LinkedList<Passageiro>passageiros;
     
-    public Viagem(Integer cod,String lp,String ld,Date dp,double p,int nl,Motorista m){
+    public Viagem(String lp,String ld,Date dp,double p,int nl,Motorista m){
         this.cod=cod;
         localPartida=lp;
         localDestino=ld;
@@ -28,18 +29,8 @@ public class Viagem {
         passageiros = new LinkedList<>();
     }
     
-    public Viagem(Integer cod,String lp,String ld,Date dp,double p,int nl){
-        this.cod=cod;
-        localPartida=lp;
-        localDestino=ld;
-        numLugares=nl;
-        precoBilhete=p;
-        dataPartida=dp;
-        passageiros = new LinkedList<>();
-    }
-
     public int getCod(){
-        return cod;
+        return cod++;
     }
     
     public String getLocalPartida() {
@@ -71,27 +62,26 @@ public class Viagem {
     }
     
     public boolean addPassageiro(Passageiro p){
-        return passageiros.add(p);
+        try{
+            if(passageiros.contains(p)){
+                System.out.println("Passageiro ["+p.getNome()+"] já existe.");
+                return false;
+            }else{
+                System.out.println("Passageiro ["+p.getNome()+"] adicionado/a");
+                this.numLugares--;
+                return passageiros.add(p);
+            }
+        }catch(Exception e){
+            System.out.println("Erro ao adicionar passageiro."+ e.getMessage());
+            return false;
+        } 
     }
-     
-    public boolean vendeBilhete(Passageiro p) {
-        if (numLugaresComprados < numLugares) { //Verifica se tem lugares disp.
-            passageiros.add(p); //adiciona o passageiro
-            numLugaresComprados++; //incrementa numLugaresComprados
-            return true; // Bilhete vendido
-        }
-        return false; // Bilhete nao vendido
-    }
-      
+    
     public int getLugaresDisponiveis(){
-        return numLugares-numLugaresComprados();
+        return numLugares-passageiros.size();
     }
-    
-    public int numLugaresComprados() {
-        return numLugaresComprados;
-    }
-    
+   
     public double getReceitas(){
-        return numLugaresComprados()*precoBilhete;
+        return passageiros.size()*precoBilhete;
     }
 }
